@@ -24,26 +24,21 @@ class Die {
             this.removeDie();
         })
         resultsDiv.appendChild(this.div);
+        console.log(this.div.id);
     }
     roll() {
         this.value = randomVal(1, 7);
         let i = this.div.id - 1;
         let cleanArr = sumArr.filter(j => typeof(j) === "number");
         sumArr = cleanArr;
-        if (sumArr[i] == null) {       
             sumArr[i] = this.value;
             this.div.textContent = this.value;
-        } else if (i == diceCount) {
-            this.div.textContent = this.value;
-            sumArr.push(this.value);
-        } else {
-            sumArr[i] = this.value;
-            this.div.textContent = this.value;
-        }
+        
         console.log(sum, sumArr);
     }
     
     removeDie() {
+        diceCount--;
         let index = this.div.id - 1;
         let el = sumArr[index];
         /*for (let j = sumArr.length - 1; j >= 0; j--) {
@@ -51,9 +46,20 @@ class Die {
             sumArr.splice(j, 1);
             }
         };*/
+        for (let i = 0; i < sumArr.length; i++) {
+            let die = document.getElementById(i + 1);
+            let dieId = parseInt(die.id);
+            console.log("Die ID: " + dieId);
+            if ( dieId > index) {
+                dieId--;
+                die.id = dieId;
+                console.log("New ID: " + dieId);
+            }
+        }
         sumArr.splice(index, 1);
         this.div.remove();
         console.log(sumArr);
+        console.log("Arr Length: " + sumArr.length);
     }
 };
 
@@ -78,15 +84,10 @@ rollDice.addEventListener('click', rerollDice);
 function rerollDice () {
     let cells = $('#results > div');
     for (let i = 0; i < cells.length; i++) {
-        let value = randomVal(1, 7);
-        for (let j = sumArr.length - 1; j >= 0; j--) {
-            sumArr.splice(j, 1, value);
-        };
 
-        cells[i].textContent = value;
-        /*let id = index + 1;
-        let reroll = document.getElementById(id);*/
-        //console.log(cells[i], value, sumArr);  
+        let value = randomVal(1, 7);
+        sumArr[i] = value;
+        cells[i].textContent = value;  
         console.log(value, cells[i], sumArr);
 };
 };
